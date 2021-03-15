@@ -180,6 +180,8 @@ class _InputBiodataState extends State<InputBiodata> {
   Image image;
   //
   final int startSoal = 1;
+  //
+  bool isSubmit = false;
 
   _addValueBiodata() async {
     // setstate method
@@ -525,6 +527,9 @@ class _InputBiodataState extends State<InputBiodata> {
                         // add value biodata
                         _addValueBiodata();
                         _saveData();
+                        setState(() {
+                          isSubmit = true;
+                        });
                         //
                         // update biodata to firestore
                         // _updateBiodata();
@@ -559,8 +564,8 @@ class _InputBiodataState extends State<InputBiodata> {
                     color: Colors.blue,
                     onPressed: () {
                       final FormState form = _formKey.currentState;
-                      if (_formKey.currentState.validate()) {
-                        _saveData();
+                      if (_formKey.currentState.validate() &&
+                          isSubmit == true) {
                         setState(() {
                           isPrefInstruction = true;
                         });

@@ -429,8 +429,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (_) => UserList(
-                        username: username,
-                      ),
+                          // username: username,
+                          ),
                     ),
                   );
                 },

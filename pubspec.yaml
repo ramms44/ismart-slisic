@@ -42,11 +42,17 @@ dependencies:
   # zoom widget
   zoom_widget: ^0.1.3
 
+  # device info
+  device_info: ^2.0.0
+
   # liquid refresh
   liquid_pull_to_refresh: ^2.0.0
 
   # back button interceptor library
   back_button_interceptor: ^5.0.0
+  
+  # json table
+  json_table: ^2.0.1
 
   # web dev
   build_runner: ^1.11.1

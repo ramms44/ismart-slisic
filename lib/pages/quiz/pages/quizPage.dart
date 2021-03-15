@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter_web_psychotest/pages/dashboard/userEntries/widgetUserEntries/userCard.dart';
+
 import 'instruction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ import 'package:flutter_web_psychotest/widgets/bottomNavbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'dart:html' as html;
 
 DateTime now = DateTime.now();
 
@@ -258,9 +261,11 @@ class _QuizPageState extends State<QuizPage> {
   //
   bool isIncorrect = false;
   bool isCorrect = false;
+  var hostname;
 
   @override
   void initState() {
+    getHost();
     starttimer();
     var questCategory = widget.questions[_currentIndex].categoryName;
 
@@ -338,6 +343,12 @@ class _QuizPageState extends State<QuizPage> {
     BackButtonInterceptor.add(myInterceptor);
 
     super.initState();
+  }
+
+  // check hostname
+  getHost() async {
+    hostname = html.window.location.host;
+    print('hostname : $hostname');
   }
 
   @override
@@ -421,6 +432,7 @@ class _QuizPageState extends State<QuizPage> {
     //
   }
 
+  // cek validasi data user - 3
   _addDataUser() async {
     print('=========== add data user ===========');
     Firestore.instance
@@ -448,6 +460,7 @@ class _QuizPageState extends State<QuizPage> {
                   'AnswerTestD_no_${i + 1}': answersD_fix_key[i],
                 'duration_test': FunctionsClass()
                     .formatHHMMSS(durationQuiz * 2), // durasi pengerjaan soal
+                'hostname': hostname,
               }
             : userVersionQuiz == 'version_3'
                 ? {
@@ -468,6 +481,7 @@ class _QuizPageState extends State<QuizPage> {
                     // 'answer_test_b': arrAnswersB,
                     'duration_test': FunctionsClass()
                         .formatHHMMSS(durationQuiz), // durasi pengerjaan soal
+                    'hostname': hostname,
                   }
                 : {
                     'name': name,
@@ -489,14 +503,20 @@ class _QuizPageState extends State<QuizPage> {
                     // 'answer_test_b': arrAnswersB,
                     'duration_test': FunctionsClass()
                         .formatHHMMSS(durationTest), // durasi pengerjaan soal
+                    'hostname': hostname,
                   });
   }
 
   _isDoneQuiz() async {
     Firestore.instance.collection('user_have_quiz').add({
-      //
+      // cek user data (validator 1) yang sudah test
       'userid': username,
       'create_at': now,
+      'nama_host': hostname,
+      'mengerjakan_quiz_sampai_bagian': soal,
+      'nama_pengguna_smart_online': name,
+      'email_pengguna_smart_online': email,
+      'nomor_hp_pengguna_smart_online': noHp
     });
   }
 
@@ -557,8 +577,11 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   // Method to Submit Feedback and save it in Google Sheets
+  // cek validasi data user 2
   _submitData() async {
     //
+    FunctionsClass().showSnackBar(context,
+        'Tunggu Sampai Anda Keluar Otomatis Dari Halaman Smart Online');
     print('=========== submit data ==========');
     // Validate returns true if the form is valid, or false
     // otherwise.
@@ -770,9 +793,12 @@ class _QuizPageState extends State<QuizPage> {
             (String response) {
               print("Response: $response");
               if (response == FormController.STATUS_SUCCESS) {
+                // cek validasi data user ke - 4
                 print('success');
                 // Feedback is saved succesfully in Google Sheets.
                 FunctionsClass().showSnackBar(context, 'Submit Data Berhasil');
+                // signOut user
+                _signOut();
                 // _showSnackbar("Feedback Submitted");
               } else {
                 // Error Occurred while saving data in Google Sheets.
@@ -790,6 +816,10 @@ class _QuizPageState extends State<QuizPage> {
                   if (response == FormController.STATUS_SUCCESS) {
                     print('success');
                     // Feedback is saved succesfully in Google Sheets.
+                    FunctionsClass()
+                        .showSnackBar(context, 'Submit Data Berhasil');
+                    // signOut user
+                    _signOut();
                     // _showSnackbar("Feedback Submitted");
                   } else {
                     // Error Occurred while saving data in Google Sheets.
@@ -806,7 +836,10 @@ class _QuizPageState extends State<QuizPage> {
                       if (response == FormController.STATUS_SUCCESS) {
                         print('success');
                         // Feedback is saved succesfully in Google Sheets.
-                        // _showSnackbar("Feedback Submitted");
+                        FunctionsClass()
+                            .showSnackBar(context, 'Submit Data Berhasil');
+                        // signOut user
+                        _signOut();
                       } else {
                         // Error Occurred while saving data in Google Sheets.
                         // _showSnackbar("Error Occurred!");
@@ -822,7 +855,10 @@ class _QuizPageState extends State<QuizPage> {
                           if (response == FormController.STATUS_SUCCESS) {
                             print('success');
                             // Feedback is saved succesfully in Google Sheets.
-                            // _showSnackbar("Feedback Submitted");
+                            FunctionsClass()
+                                .showSnackBar(context, 'Submit Data Berhasil');
+                            // signOut user
+                            _signOut();
                           } else {
                             // Error Occurred while saving data in Google Sheets.
                             // _showSnackbar("Error Occurred!");
@@ -837,7 +873,10 @@ class _QuizPageState extends State<QuizPage> {
                           if (response == FormController.STATUS_SUCCESS) {
                             print('success');
                             // Feedback is saved succesfully in Google Sheets.
-                            // _showSnackbar("Feedback Submitted");
+                            FunctionsClass()
+                                .showSnackBar(context, 'Submit Data Berhasil');
+                            // signOut user
+                            _signOut();
                           } else {
                             // Error Occurred while saving data in Google Sheets.
                             // _showSnackbar("Error Occurred!");
@@ -845,8 +884,6 @@ class _QuizPageState extends State<QuizPage> {
                           }
                         },
                       );
-    //
-    //
   }
 
   getDataCompany() async {
@@ -1576,8 +1613,6 @@ class _QuizPageState extends State<QuizPage> {
                                                         //
                                                         // await _clear();
                                                         //
-                                                        // signOut user
-                                                        _signOut();
                                                         // _saveScoreB();
                                                         //
                                                       } else {
@@ -2582,8 +2617,6 @@ class _QuizPageState extends State<QuizPage> {
                                                               //
                                                               // await _clear();
                                                               //
-                                                              // signOut user
-                                                              _signOut();
                                                               //
                                                             } else {
                                                               //

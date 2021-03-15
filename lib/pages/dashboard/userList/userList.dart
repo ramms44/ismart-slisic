@@ -1,132 +1,133 @@
+/// Flutter code sample for DataTable
+
+// This sample shows how to display a [DataTable] with three columns: name, age, and
+// role. The columns are defined by three [DataColumn] objects. The table
+// contains three rows of data for three example users, the data for which
+// is defined by three [DataRow] objects.
+//
+// ![](https://flutter.github.io/assets-for-api-docs/assets/material/data_table.png)
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'userListDetail.dart';
-import 'request/userRequest.dart';
-import 'model/userModel.dart';
+import 'package:json_table/json_table.dart';
+import 'package:http/http.dart' as http;
 
 class UserList extends StatefulWidget {
-  final String username;
-
-  UserList({
-    Key key,
-    this.username,
-  }) : super(key: key);
   @override
-  _UserListState createState() => _UserListState(
-        username,
-      );
+  _UserListState createState() => _UserListState();
 }
 
 class _UserListState extends State<UserList> {
-  //
+  List jsonSample;
 
-  final String username;
-
-  _UserListState(this.username);
-  //
   @override
   void initState() {
-    username == 'admin_company_a' || username == 'admin_company_b'
-        ? fetchUsers().then((value) {
-            setState(() {
-              _users.addAll(value);
-            });
-          })
-        : fetchAdmin().then((value) {
-            setState(() {
-              _users.addAll(value);
-            });
-          });
     super.initState();
+    _initData();
   }
-
-  // ignore: deprecated_member_use
-  List<User> _users = List<User>();
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setApplicationSwitcherDescription(
-        ApplicationSwitcherDescription(
-      label: 'Smart Online',
-      primaryColor: Theme.of(context).primaryColor.value,
-    ));
-    print(_users.length);
-    // print('username: ${_users[0].username}');
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          username == 'admin_company_a' || username == 'admin_company_b'
-              ? 'User ID User Test'
-              : 'User ID Admin',
+          'User ID List',
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.only(
-              top: 10,
-              bottom: 10,
-              left: 25,
-              right: 25,
-            ),
-            elevation: 5,
-            color: index % 2 != 0 ? Colors.blue : Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
-              ),
-            ),
-            child: InkWell(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 64,
-                  bottom: 64,
-                  right: 32,
-                  left: 32,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'User Id : ${_users[index].username}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: index % 2 != 0 ? Colors.white : Colors.black,
-                      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Container(
+          child: jsonSample == null
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
+                  children: [
+                    JsonTable(
+                      jsonSample,
+                      tableHeaderBuilder: (String header) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 100.0,
+                            vertical: 10.0,
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.5, color: Colors.lightBlue),
+                              color: Colors.lightBlue[300]),
+                          child: Text(
+                            header,
+                            textAlign: TextAlign.center,
+                            style:
+                                Theme.of(context).textTheme.display1.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16.0,
+                                      color: Colors.white,
+                                    ),
+                          ),
+                        );
+                      },
+                      tableCellBuilder: (value) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 4.0, vertical: 2.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.grey.withOpacity(0.5))),
+                          child: Text(
+                            value,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .display1
+                                .copyWith(
+                                    fontSize: 14.0, color: Colors.grey[900]),
+                          ),
+                        );
+                      },
+                      showColumnToggle: true,
+                      allowRowHighlight: true,
+                      rowHighlightColor: Colors.green[500].withOpacity(0.7),
+                      paginationRowCount: 20,
+                      onRowSelect: (index, map) {
+                        print(index);
+                        print(map);
+
+                        /// navigate
+                      },
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 40.0,
                     ),
                     Text(
-                      'Object Id : ${_users[index].objectId}',
-                      style: TextStyle(
-                        color: index % 2 != 0 ? Colors.white : Colors.grey,
-                      ),
+                      "User Id List Table, creates table from api json github",
                     ),
                   ],
                 ),
-              ),
-              onTap: () {
-                // navigate to user list detail
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => UserListDetail(
-                      username: _users[index].username.toString(),
-                      objectid: _users[index].objectId.toString(),
-                      email: _users[index].email.toString(),
-                      createdat: _users[index].createdAt,
-                      updatedat: _users[index].updatedAt,
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-        itemCount: _users.length,
+        ),
       ),
     );
+  }
+
+  String getPrettyJSONString(jsonObject) {
+    JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+    String jsonString = encoder.convert(json.decode(jsonObject));
+    return jsonString;
+  }
+
+  void _initData() async {
+    try {
+      String url = "https://ramms44.github.io/users/users_slisic.json";
+      final response = await http.get(url);
+      print(response.body);
+      final userListID = jsonDecode(response.body);
+      if (mounted)
+        setState(() {
+          jsonSample = jsonDecode(response.body) as List;
+        });
+    } catch (e) {
+      print(e);
+    }
   }
 }

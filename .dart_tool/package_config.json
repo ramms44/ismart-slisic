@@ -266,6 +266,18 @@
       "languageVersion": "2.9"
     },
     {
+      "name": "device_info",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/device_info-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "device_info_platform_interface",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/device_info_platform_interface-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "devicelocale",
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/devicelocale-0.2.1",
       "packageUri": "lib/",
@@ -546,6 +558,12 @@
       "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.7"
+    },
+    {
+      "name": "json_table",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/json_table-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "liquid_pull_to_refresh",
@@ -1052,7 +1070,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2021-03-13T02:36:40.636237Z",
+  "generated": "2021-03-15T17:15:14.653852Z",
   "generator": "pub",
   "generatorVersion": "2.13.0-30.0.dev"
 }
