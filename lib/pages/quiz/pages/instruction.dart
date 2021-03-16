@@ -131,7 +131,8 @@ class _InstructionQuizState extends State<InstructionQuiz> {
         userCompany = 'user1';
       });
     }
-    if (username.contains(new RegExp(r'user2', caseSensitive: false))) {
+    if (username.contains(new RegExp(r'user2', caseSensitive: false))||
+        username.contains(new RegExp(r'tes', caseSensitive: false))) {
       // print('user from companyB');
       setState(() {
         userCompany = 'user2';

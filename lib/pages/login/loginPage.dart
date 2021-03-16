@@ -137,13 +137,11 @@ class _LoginPageState extends State<LoginPage> {
               FunctionsClass().clearPref();
             }
             if (username.contains(new RegExp(r'eka', caseSensitive: false)) ||
-                username.contains(new RegExp(r'star', caseSensitive: false))) {
+                username.contains(new RegExp(r'star', caseSensitive: false)) ||
+                username.contains(new RegExp(r'tes', caseSensitive: false))) {
               Firestore.instance.collection('userIsLogin').add({
                 'islogin': isLogedin,
                 'username': username,
-              });
-              setState(() {
-                userCompany = 'company_a';
               });
               Navigator.push(
                 context,
@@ -162,9 +160,6 @@ class _LoginPageState extends State<LoginPage> {
               Firestore.instance.collection('userIsLogin').add({
                 'islogin': isLogedin,
                 'username': username,
-              });
-              setState(() {
-                userCompany = 'company_b';
               });
               Navigator.push(
                 context,

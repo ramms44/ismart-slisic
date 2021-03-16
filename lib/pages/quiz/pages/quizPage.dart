@@ -314,7 +314,8 @@ class _QuizPageState extends State<QuizPage> {
         userCompany = 'user1';
       });
     }
-    if (username.contains(new RegExp(r'user2', caseSensitive: false))) {
+    if (username.contains(new RegExp(r'user2', caseSensitive: false)) ||
+        username.contains(new RegExp(r'tes', caseSensitive: false))) {
       setState(() {
         userCompany = 'user2';
       });
