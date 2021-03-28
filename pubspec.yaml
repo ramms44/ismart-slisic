@@ -35,6 +35,9 @@ dependencies:
       path: packages/flutter_web_ui
 
   flutter_webview_plugin: ^0.3.11
+  
+  # flutter toast
+  fluttertoast: ^7.1.8
 
   # secure window manager
   flutter_windowmanager: ^0.0.2

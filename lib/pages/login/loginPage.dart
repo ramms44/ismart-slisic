@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_web_psychotest/widgets/zoom_widget.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -32,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<LiquidPullToRefreshState> _refreshIndicatorKey =
       GlobalKey<LiquidPullToRefreshState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  FToast fToast;
 
   Future<void> _handleRefresh() {
     final Completer<void> completer = Completer<void>();
@@ -75,7 +78,19 @@ class _LoginPageState extends State<LoginPage> {
           });
           print('iscantLogin: $iscantLogin');
           print('cant login');
-          FunctionsClass().showSnackBar(context, 'Anda Sedang Login');
+
+          /// menampilkan toast id sedang login
+          FunctionsClass().showToast(
+            'Anda Sedang Login', // message parameter
+            Colors.white, // textColor parameter
+            Colors.orangeAccent, // color parameter
+            Icon(
+              Icons.warning_amber_outlined,
+              color: Colors.white,
+            ), // icon parameter
+            Colors.orangeAccent.withOpacity(0.2), // shadow color
+            fToast, // ftoast parameter
+          );
           FunctionsClass().clearPref();
         }
         if (checkidlength == querySnapshot.size - 1 && iscantLogin == false) {
@@ -117,7 +132,19 @@ class _LoginPageState extends State<LoginPage> {
           if (username == password && username != null ||
               password != null && isSuccessLogin == true) {
             print("Success login!");
-            FunctionsClass().showSnackBar(context, 'Anda Berhasil Login');
+
+            /// show toast berhasil login
+            FunctionsClass().showToast(
+              'Anda Berhasil Login', // message parameter
+              Colors.white, // textColor parameter
+              Colors.green, // color parameter
+              Icon(
+                Icons.check_box,
+                color: Colors.white,
+              ), // icon parameter
+              Colors.green.withOpacity(0.2), // shadow color
+              fToast, // ftoast parameter
+            );
             if (username == 'superadmin' ||
                 username == 'admin1' ||
                 username == 'admin2' ||
@@ -181,13 +208,28 @@ class _LoginPageState extends State<LoginPage> {
       });
     });
     username != password
-        ? FunctionsClass().showSnackBar(context, 'UserId / Password Salah')
+        ? FunctionsClass().showToast(
+            'UserId atau Passwrod Salah.', // message parameter
+            Colors.white, // parameter textColor
+            Colors.red, // color parameter
+            Icon(
+              Icons.clear_outlined,
+              color: Colors.white,
+            ), // icon parameter
+            Colors.red.withOpacity(0.2), // shadow color
+            fToast, // ftoast parameter
+          )
         : null;
   }
 
   @override
   void initState() {
     // FunctionsClass().clearPref();
+
+    //
+    fToast = FToast();
+    fToast.init(context);
+    //
     print('typeuserid : $typeuserid');
     getValidationData().whenComplete(
       () async {
@@ -349,7 +391,11 @@ class _LoginPageState extends State<LoginPage> {
               height: 1000,
               canvasColor: Colors.blue,
               backgroundColor: Colors.blue,
-              colorScrollBars: Colors.purple,
+              colorScrollBars: Colors.black26,
+
+              /// add color gradient linear on zoom widget [linearColorFirst] & [linearColorSecond]
+              linearColorFirst: Colors.blue,
+              linearColorSecond: Colors.indigoAccent,
               opacityScrollBars: 0.9,
               scrollWeight: 10.0,
               centerOnScale: true,
@@ -417,9 +463,16 @@ class _LoginPageState extends State<LoginPage> {
                                         child: BeautyTextfield(
                                           width: 250,
                                           height: 60,
-                                          fontSize: 16,
                                           duration: Duration(milliseconds: 300),
                                           inputType: TextInputType.text,
+
+                                          /// menambah parameter [backgroundColor] dan [isFocusTextColor]
+                                          backgroundColor:
+                                              Colors.black.withOpacity(0.5),
+                                          isFocusTextColor: Colors.white,
+
+                                          /// fontsize
+                                          fontSize: 16,
                                           prefixIcon: Icon(Icons.person),
                                           placeholder: "UserId",
                                           onTap: () {
@@ -434,11 +487,18 @@ class _LoginPageState extends State<LoginPage> {
                                         child: BeautyTextfield(
                                           width: 250,
                                           height: 60,
-                                          fontSize: 16,
                                           obscureText: true,
                                           maxLines: 1,
                                           duration: Duration(milliseconds: 300),
                                           inputType: TextInputType.text,
+
+                                          /// menambah parameter [backgroundColor] dan [isFocusTextColor]
+                                          backgroundColor:
+                                              Colors.black.withOpacity(0.5),
+                                          isFocusTextColor: Colors.white,
+
+                                          /// fontsize
+                                          fontSize: 16,
                                           prefixIcon: Icon(Icons.settings),
                                           placeholder: "Password",
                                           onTap: () {

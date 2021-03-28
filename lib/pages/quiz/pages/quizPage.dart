@@ -22,6 +22,7 @@ import 'package:flutter_web_psychotest/widgets/bottomNavbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:html' as html;
 
 DateTime now = DateTime.now();
@@ -267,6 +268,9 @@ class _QuizPageState extends State<QuizPage> {
   void initState() {
     getHost();
     starttimer();
+
+    fToast = FToast();
+    fToast.init(context);
     var questCategory = widget.questions[_currentIndex].categoryName;
 
     setState(() {
@@ -309,28 +313,26 @@ class _QuizPageState extends State<QuizPage> {
     }
 
     if (username.contains(new RegExp(r'eka', caseSensitive: false)) ||
-        username.contains(new RegExp(r'star', caseSensitive: false))) {
+        username.contains(new RegExp(r'star', caseSensitive: false)) ||
+        username.contains(new RegExp(r'aman', caseSensitive: false))) {
       setState(() {
         userCompany = 'user1';
       });
-    }
-    if (username.contains(new RegExp(r'user2', caseSensitive: false)) ||
-        username.contains(new RegExp(r'tes', caseSensitive: false))) {
+    } else if (username.contains(new RegExp(r'user2', caseSensitive: false)) ||
+        username.contains(new RegExp(r'tes', caseSensitive: false)) ||
+        username.contains(new RegExp(r'test', caseSensitive: false))) {
       setState(() {
         userCompany = 'user2';
       });
-    }
-    if (username.contains(new RegExp(r'user3', caseSensitive: false))) {
+    } else if (username.contains(new RegExp(r'user3', caseSensitive: false))) {
       setState(() {
         userCompany = 'user3';
       });
-    }
-    if (username.contains(new RegExp(r'user4', caseSensitive: false))) {
+    } else if (username.contains(new RegExp(r'user4', caseSensitive: false))) {
       setState(() {
         userCompany = 'user4';
       });
-    }
-    if (username.contains(new RegExp(r'user5', caseSensitive: false))) {
+    } else {
       setState(() {
         userCompany = 'user5';
       });
@@ -345,6 +347,8 @@ class _QuizPageState extends State<QuizPage> {
 
     super.initState();
   }
+
+  FToast fToast;
 
   // check hostname
   getHost() async {
@@ -581,8 +585,8 @@ class _QuizPageState extends State<QuizPage> {
   // cek validasi data user 2
   _submitData() async {
     //
-    FunctionsClass().showSnackBar(context,
-        'Tunggu Sampai Anda Keluar Otomatis Dari Halaman Smart Online');
+    // FunctionsClass().showSnackBar(context,
+    //     'Tunggu Sampai Anda Keluar Otomatis Dari Halaman Smart Online');
     print('=========== submit data ==========');
     // Validate returns true if the form is valid, or false
     // otherwise.
@@ -797,14 +801,24 @@ class _QuizPageState extends State<QuizPage> {
                 // cek validasi data user ke - 4
                 print('success');
                 // Feedback is saved succesfully in Google Sheets.
-                FunctionsClass().showSnackBar(context, 'Submit Data Berhasil');
+                FunctionsClass().showToast(
+                  'Data Test Berhasil Disimpan', // message parameter
+                  Colors.white, // textColor parameter
+                  Colors.green, // color parameter
+                  Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ), // icon parameter
+                  Colors.green.withOpacity(0.2), // shadow color
+                  fToast, // ftoast parameter
+                );
                 // signOut user
                 _signOut();
                 // _showSnackbar("Feedback Submitted");
               } else {
                 // Error Occurred while saving data in Google Sheets.
                 // _showSnackbar("Error Occurred!");
-                FunctionsClass().showSnackBar(context, 'Submit Data Error');
+                // FunctionsClass().showSnackBar(context, 'Submit Data Error');
                 print('error');
               }
             },
@@ -817,8 +831,17 @@ class _QuizPageState extends State<QuizPage> {
                   if (response == FormController.STATUS_SUCCESS) {
                     print('success');
                     // Feedback is saved succesfully in Google Sheets.
-                    FunctionsClass()
-                        .showSnackBar(context, 'Submit Data Berhasil');
+                    FunctionsClass().showToast(
+                      'Data Test Berhasil Disimpan', // message parameter
+                      Colors.white, // textColor parameter
+                      Colors.green, // color parameter
+                      Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ), // icon parameter
+                      Colors.green.withOpacity(0.2), // shadow color
+                      fToast, // ftoast parameter
+                    );
                     // signOut user
                     _signOut();
                     // _showSnackbar("Feedback Submitted");
@@ -837,8 +860,17 @@ class _QuizPageState extends State<QuizPage> {
                       if (response == FormController.STATUS_SUCCESS) {
                         print('success');
                         // Feedback is saved succesfully in Google Sheets.
-                        FunctionsClass()
-                            .showSnackBar(context, 'Submit Data Berhasil');
+                        FunctionsClass().showToast(
+                          'Data Test Berhasil Disimpan', // message parameter
+                          Colors.white, // textColor parameter
+                          Colors.green, // color parameter
+                          Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          ), // icon parameter
+                          Colors.green.withOpacity(0.2), // shadow color
+                          fToast, // ftoast parameter
+                        );
                         // signOut user
                         _signOut();
                       } else {
@@ -856,8 +888,17 @@ class _QuizPageState extends State<QuizPage> {
                           if (response == FormController.STATUS_SUCCESS) {
                             print('success');
                             // Feedback is saved succesfully in Google Sheets.
-                            FunctionsClass()
-                                .showSnackBar(context, 'Submit Data Berhasil');
+                            FunctionsClass().showToast(
+                              'Data Test Berhasil Disimpan', // message parameter
+                              Colors.white, // textColor parameter
+                              Colors.green, // color parameter
+                              Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ), // icon parameter
+                              Colors.green.withOpacity(0.2), // shadow color
+                              fToast, // ftoast parameter
+                            );
                             // signOut user
                             _signOut();
                           } else {
@@ -874,8 +915,17 @@ class _QuizPageState extends State<QuizPage> {
                           if (response == FormController.STATUS_SUCCESS) {
                             print('success');
                             // Feedback is saved succesfully in Google Sheets.
-                            FunctionsClass()
-                                .showSnackBar(context, 'Submit Data Berhasil');
+                            FunctionsClass().showToast(
+                              'Data Test Berhasil Disimpan', // message parameter
+                              Colors.white, // textColor parameter
+                              Colors.green, // color parameter
+                              Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              ), // icon parameter
+                              Colors.green.withOpacity(0.2), // shadow color
+                              fToast, // ftoast parameter
+                            );
                             // signOut user
                             _signOut();
                           } else {

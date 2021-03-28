@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class FunctionsClass {
   /// create [showSnackBar] function with params
@@ -92,5 +93,43 @@ class FunctionsClass {
       return "$minutesStr menit $secondsStr detik";
     }
     return "$hoursStr:$minutesStr:$secondsStr";
+  }
+
+  /// membuat fungsi [showToast] untuk menampilkan toast
+  showToast(message, textColor, Color color, icons, shadowColor, fToast) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor,
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3), // changes position of shadow
+          ),
+        ],
+        color: color,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            message,
+            style: TextStyle(color: textColor),
+          ),
+          SizedBox(
+            width: 12.0,
+          ),
+          icons,
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: Duration(seconds: 2),
+    );
   }
 }

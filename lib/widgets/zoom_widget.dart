@@ -6,7 +6,7 @@ import 'package:zoom_widget/MultiTouchGestureRecognizer.dart';
 class Zoom extends StatefulWidget {
   final double width, height;
   final Widget child;
-  final Color backgroundColor;
+  final Color backgroundColor, linearColorFirst, linearColorSecond;
   final Color canvasColor;
   final void Function(Offset) onPositionUpdate;
   final void Function(double, double) onScaleUpdate;
@@ -30,6 +30,8 @@ class Zoom extends StatefulWidget {
     this.onPositionUpdate,
     this.onScaleUpdate,
     this.backgroundColor = Colors.grey,
+    this.linearColorFirst = Colors.blue,
+    this.linearColorSecond = Colors.indigo,
     this.canvasColor = Colors.white,
     this.scrollWeight = 7.0,
     this.opacityScrollBars = 0.5,
@@ -442,79 +444,94 @@ class _ZoomState extends State<Zoom> with TickerProviderStateMixin {
                   width: constraints.maxWidth,
                   height: constraints.maxHeight,
                   color: widget.backgroundColor,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        top: auxTop + localTop + centerTop + scaleTop,
-                        left: auxLeft + localLeft + centerLeft + scaleLeft,
-                        child: Transform.scale(
-                          scale: scale,
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: widget.canvasColor,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      /// add [LinearGradient]
+                      gradient: LinearGradient(
+                        colors: [
+                          widget.linearColorFirst,
+                          widget.linearColorSecond
+                        ],
+                      ),
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          top: auxTop + localTop + centerTop + scaleTop,
+                          left: auxLeft + localLeft + centerLeft + scaleLeft,
+                          child: Transform.scale(
+                            scale: scale,
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              // decoration: BoxDecoration(
+                              //   color: widget.canvasColor,
 
-                              /// create parameter [widget.canvasShadow] on boolean for enable and disable shadow canvas
-                              boxShadow: widget.canvasShadow == true
-                                  ? [
-                                      BoxShadow(
-                                        color: Colors.black45,
-                                        blurRadius:
-                                            20.0, // has the effect of softening the shadow
-                                        spreadRadius:
-                                            5.0, // has the effect of extending the shadow
-                                        offset: Offset(
-                                          10.0, // horizontal, move right 10
-                                          10.0, // vertical, move down 10
-                                        ),
-                                      )
-                                    ]
-                                  : null,
+                              //   /// create parameter [widget.canvasShadow] on boolean for enable and disable shadow canvas
+                              //   boxShadow: widget.canvasShadow == true
+                              //       ? [
+                              //           BoxShadow(
+                              //             color: Colors.black45,
+                              //             blurRadius:
+                              //                 20.0, // has the effect of softening the shadow
+                              //             spreadRadius:
+                              //                 5.0, // has the effect of extending the shadow
+                              //             offset: Offset(
+                              //               10.0, // horizontal, move right 10
+                              //               10.0, // vertical, move down 10
+                              //             ),
+                              //           )
+                              //         ]
+                              //       : null,
+                              // ),
+                              width: widget.width,
+                              height: widget.height,
+                              child: widget.child,
                             ),
-                            width: widget.width,
-                            height: widget.height,
-                            child: widget.child,
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: constraints.maxHeight - widget.scrollWeight,
-                        left: -(auxLeft + localLeft + centerLeft + scaleLeft) /
-                            ((widget.width * scale) / constraints.maxWidth),
-                        child: Opacity(
-                          opacity:
-                              (widget.width * scale <= constraints.maxWidth ||
-                                      !widget.enableScroll)
-                                  ? 0
-                                  : widget.opacityScrollBars,
-                          child: Container(
-                            height: widget.scrollWeight,
-                            width: constraints.maxWidth /
-                                ((widget.width * scale) / constraints.maxWidth),
-                            color: widget.colorScrollBars,
+                        Positioned(
+                          top: constraints.maxHeight - widget.scrollWeight,
+                          left: -(auxLeft +
+                                  localLeft +
+                                  centerLeft +
+                                  scaleLeft) /
+                              ((widget.width * scale) / constraints.maxWidth),
+                          child: Opacity(
+                            opacity:
+                                (widget.width * scale <= constraints.maxWidth ||
+                                        !widget.enableScroll)
+                                    ? 0
+                                    : widget.opacityScrollBars,
+                            child: Container(
+                              height: widget.scrollWeight,
+                              width: constraints.maxWidth /
+                                  ((widget.width * scale) /
+                                      constraints.maxWidth),
+                              color: widget.colorScrollBars,
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: -(auxTop + localTop + centerTop + scaleTop) /
-                            ((widget.height * scale) / constraints.maxHeight),
-                        left: constraints.maxWidth - widget.scrollWeight,
-                        child: Opacity(
-                          opacity:
-                              (widget.height * scale <= constraints.maxHeight ||
-                                      !widget.enableScroll)
-                                  ? 0
-                                  : widget.opacityScrollBars,
-                          child: Container(
-                            width: widget.scrollWeight,
-                            height: constraints.maxHeight /
-                                ((widget.height * scale) /
-                                    constraints.maxHeight),
-                            color: widget.colorScrollBars,
+                        Positioned(
+                          top: -(auxTop + localTop + centerTop + scaleTop) /
+                              ((widget.height * scale) / constraints.maxHeight),
+                          left: constraints.maxWidth - widget.scrollWeight,
+                          child: Opacity(
+                            opacity: (widget.height * scale <=
+                                        constraints.maxHeight ||
+                                    !widget.enableScroll)
+                                ? 0
+                                : widget.opacityScrollBars,
+                            child: Container(
+                              width: widget.scrollWeight,
+                              height: constraints.maxHeight /
+                                  ((widget.height * scale) /
+                                      constraints.maxHeight),
+                              color: widget.colorScrollBars,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

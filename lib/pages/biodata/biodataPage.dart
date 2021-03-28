@@ -5,10 +5,12 @@ import 'package:flutter_web_image_picker/flutter_web_image_picker.dart';
 import 'package:flutter_web_psychotest/pages/quiz/pages/instruction.dart';
 import 'package:flutter_web_psychotest/services/crud.dart';
 import 'package:flutter_web_psychotest/widgets/bottomNavbar.dart';
+import 'package:flutter_web_psychotest/widgets/functions.dart';
 import 'package:flutter_web_psychotest/widgets/myAppbar.dart';
 import 'package:flutter_web_psychotest/widgets/textField.dart';
 import 'package:getwidget/components/dropdown/gf_dropdown.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class BiodataPage extends StatefulWidget {
@@ -135,8 +137,12 @@ class _BiodataPageState extends State<BiodataPage> {
   void initState() {
     print('username pada biodata page : ${username}');
     userVersionQuiz(username);
+    fToast = FToast();
+    fToast.init(context);
     super.initState();
   }
+
+  FToast fToast;
 
   // user version with userid
   userVersionQuiz(username) async {
@@ -558,16 +564,33 @@ class _BiodataPageState extends State<BiodataPage> {
                                     // update biodata to firestore
                                     // _updateBiodata();
                                     // ignore: deprecated_member_use
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content:
-                                          Text('Biodata berhasil disimpan'),
-                                    ));
+                                    FunctionsClass().showToast(
+                                      'Biodata berhasil disimpan', // message parameter
+                                      Colors.white, // textColor parameter
+                                      Colors.green, // color parameter
+                                      Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ), // icon parameter
+                                      Colors.green
+                                          .withOpacity(0.2), // shadow color
+                                      fToast, // ftoast parameter
+                                    );
                                   } else {
                                     print('Form is invalid');
                                     // ignore: deprecated_member_use
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('Isi biodata dengan benar'),
-                                    ));
+                                    FunctionsClass().showToast(
+                                      'Isi biodata dengan benar', // message parameter
+                                      Colors.white, // textColor parameter
+                                      Colors.orangeAccent, // color parameter
+                                      Icon(
+                                        Icons.warning_amber_outlined,
+                                        color: Colors.white,
+                                      ), // icon parameter
+                                      Colors.orangeAccent
+                                          .withOpacity(0.2), // shadow color
+                                      fToast, // ftoast parameter
+                                    );
                                   }
                                 },
                                 child: Text(
@@ -619,10 +642,18 @@ class _BiodataPageState extends State<BiodataPage> {
                                   } else {
                                     print('Form is invalid');
                                     // ignore: deprecated_member_use
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text(
-                                          'Isi biodata dengan benar, Lalu Submit'),
-                                    ));
+                                    FunctionsClass().showToast(
+                                      'Isi biodata dengan benar, lalu submit', // message parameter
+                                      Colors.white, // textColor parameter
+                                      Colors.orangeAccent, // color parameter
+                                      Icon(
+                                        Icons.warning_amber_outlined,
+                                        color: Colors.white,
+                                      ), // icon parameter
+                                      Colors.orangeAccent
+                                          .withOpacity(0.2), // shadow color
+                                      fToast, // ftoast parameter
+                                    );
                                   }
                                   //
                                 },

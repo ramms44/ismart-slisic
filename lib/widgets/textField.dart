@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BeautyTextfield extends StatefulWidget {
   final BorderRadius cornerRadius;
   final double width, height, wordSpacing;
-  final Color backgroundColor, accentColor, textColor;
+  final Color backgroundColor, accentColor, textColor, isFocusTextColor;
   final String placeholder, fontFamily;
   final Icon prefixIcon, suffixIcon;
   final TextInputType inputType;
@@ -34,6 +34,7 @@ class BeautyTextfield extends StatefulWidget {
     this.backgroundColor = const Color(0xffECECEC),
     this.cornerRadius = const BorderRadius.all(Radius.circular(10)),
     this.textColor = Colors.grey,
+    this.isFocusTextColor = Colors.grey,
     this.accentColor = Colors.white,
     this.placeholder = "Placeholder",
     this.isShadow = true,
@@ -53,7 +54,7 @@ class BeautyTextfield extends StatefulWidget {
     this.onChanged,
     this.onTap,
     this.onSubmitted,
-    this.fontSize = 12,
+    this.fontSize = 12, // default fontsize 12
   })  : assert(width != null),
         assert(height != null),
         assert(prefixIcon != null),
@@ -152,9 +153,10 @@ class _BeautyTextfieldState extends State<BeautyTextfield> {
                         fontWeight: widget.fontWeight,
                         wordSpacing: widget.wordSpacing,
                         textBaseline: widget.textBaseline,
-                        fontSize: widget.fontSize,
+                        fontSize: widget
+                            .fontSize, // merubah ukuran fontsize ke dalam widget parameter, untuk digunakan
                         letterSpacing: 1,
-                        color: isFocus ? Colors.grey : Colors.grey,
+                        color: isFocus ? widget.isFocusTextColor : Colors.grey,
                       ),
                       autofocus: widget.autofocus,
                       autocorrect: widget.autocorrect,
